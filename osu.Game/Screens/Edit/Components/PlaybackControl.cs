@@ -40,31 +40,32 @@ namespace osu.Game.Screens.Edit.Components
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
-                    Scale = new Vector2(1.4f),
+                    Scale = new Vector2(0.7f),
                     IconScale = new Vector2(1.4f),
                     Icon = FontAwesome.Regular.PlayCircle,
                     Action = togglePause,
                 },
                 new OsuSpriteText
                 {
-                    Origin = Anchor.BottomLeft,
+                    Origin = Anchor.CentreLeft,
                     Text = EditorStrings.PlaybackSpeed,
                     RelativePositionAxes = Axes.Y,
                     Y = 0.5f,
-                    Padding = new MarginPadding { Left = 45 }
+                    Padding = new MarginPadding { Left = 30 }
                 },
                 new Container
                 {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
                     RelativeSizeAxes = Axes.Both,
                     Height = 0.5f,
-                    Padding = new MarginPadding { Left = 45 },
+                    Padding = new MarginPadding { Left = 85 },
                     Child = new PlaybackTabControl { Current = freqAdjust },
                 }
             };
 
-            Track.BindValueChanged(tr => tr.NewValue?.AddAdjustment(AdjustableProperty.Frequency, freqAdjust), true);
+            // no pitch changes plz
+            Track.BindValueChanged(tr => tr.NewValue?.AddAdjustment(AdjustableProperty.Tempo, freqAdjust), true);
         }
 
         protected override void Dispose(bool isDisposing)

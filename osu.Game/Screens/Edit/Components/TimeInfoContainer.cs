@@ -34,15 +34,15 @@ namespace osu.Game.Screens.Edit.Components
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Spacing = new Vector2(-2, 0),
-                    Font = OsuFont.Torus.With(size: 36, fixedWidth: true, weight: FontWeight.Light),
-                    Y = -10,
+                    Font = OsuFont.Torus.With(size: 18, fixedWidth: true, weight: FontWeight.Light),
+                    Y = 0,
                 },
                 bpm = new OsuSpriteText
                 {
                     Colour = colours.Orange1,
-                    Anchor = Anchor.CentreLeft,
-                    Font = OsuFont.Torus.With(size: 18, weight: FontWeight.SemiBold),
-                    Position = new Vector2(2, 5),
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Font = OsuFont.Torus.With(size: 12, weight: FontWeight.SemiBold),
                 }
             };
         }

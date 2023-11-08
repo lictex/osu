@@ -43,6 +43,10 @@ namespace osu.Game.Screens.Edit.Setup
                 Horizontal = 100
             };
 
+            Width = 0.5f;
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+
             InternalChild = new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.X,

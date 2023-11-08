@@ -33,9 +33,39 @@ namespace osu.Game.Rulesets.Osu.Edit.Blueprints.HitCircles
 
             circlePiece.UpdateFrom(HitObject);
         }
-
+        protected override bool OnDragStart(DragStartEvent e)
+        {
+            // for drag seeking
+            if (e.Button == MouseButton.Middle)
+            {
+                return false;
+            }
+            if (e.Button == MouseButton.Left && e.IsPressed(MouseButton.Middle))
+            {
+                return false;
+            }
+            return base.OnDragStart(e);
+        }
         protected override bool OnMouseDown(MouseDownEvent e)
         {
+            // return to select mode with right btn
+            if (e.Button == MouseButton.Right && !e.ShiftPressed)
+            {
+                AutoMapper.Internal.TypeExtensions.GetInheritedMethod(typeof(OsuHitObjectComposer), "setSelectTool")?.Invoke(
+                    Framework.Graphics.DrawableExtensions.FindClosestParent<OsuHitObjectComposer>(this),
+                    null
+                );
+                return true;
+            }
+            // for drag seeking
+            if (e.Button == MouseButton.Middle)
+            {
+                return false;
+            }
+            if (e.Button == MouseButton.Left && e.IsPressed(MouseButton.Middle))
+            {
+                return false;
+            }
             if (e.Button == MouseButton.Left)
             {
                 EndPlacement(true);

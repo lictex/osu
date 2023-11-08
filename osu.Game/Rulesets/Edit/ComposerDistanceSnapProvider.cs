@@ -145,25 +145,43 @@ namespace osu.Game.Rulesets.Edit
         {
             base.Update();
 
-            (HitObject before, HitObject after)? objects = getObjectsOnEitherSideOfCurrentTime();
+            // show ds around selected objects when possible
+            HitObject? selected = editorBeatmap.SelectedHitObjects.FirstOrDefault();
+            HitObject? selectedBefore =
+                playfield.AllHitObjects.TakeWhile(o => o.HitObject != selected).LastOrDefault()?.HitObject;
+            HitObject? selectedAfter =
+                playfield.AllHitObjects.SkipWhile(o => o.HitObject != selected).Skip(1).FirstOrDefault()?.HitObject;
 
-            double currentSnap = objects == null
-                ? 0
-                : ReadCurrentDistanceSnap(objects.Value.before, objects.Value.after);
-
-            if (currentSnap > DistanceSpacingMultiplier.MinValue)
+            if (selected != null && selectedBefore != null && selectedAfter != null)
             {
-                currentDistanceSpacingButton.Enabled.Value = currentDistanceSpacingButton.Expanded.Value
-                                                             && !DistanceSpacingMultiplier.Disabled
-                                                             && !Precision.AlmostEquals(currentSnap, DistanceSpacingMultiplier.Value, DistanceSpacingMultiplier.Precision / 2);
-                currentDistanceSpacingButton.ContractedLabelText = $"current {currentSnap:N2}x";
-                currentDistanceSpacingButton.ExpandedLabelText = $"Use current ({currentSnap:N2}x)";
+                double beforeSnap = ReadCurrentDistanceSnap(selectedBefore, selected);
+                double afterSnap = ReadCurrentDistanceSnap(selected, selectedAfter);
+                currentDistanceSpacingButton.Enabled.Value = false;
+                currentDistanceSpacingButton.ContractedLabelText = $"{beforeSnap:N2}x | {afterSnap:N2}x";
+                currentDistanceSpacingButton.ExpandedLabelText = $"before: {beforeSnap:N2}x, after: {afterSnap:N2}x";
             }
             else
             {
-                currentDistanceSpacingButton.Enabled.Value = false;
-                currentDistanceSpacingButton.ContractedLabelText = string.Empty;
-                currentDistanceSpacingButton.ExpandedLabelText = "Use current (unavailable)";
+                (HitObject before, HitObject after)? objects = getObjectsOnEitherSideOfCurrentTime();
+
+                double currentSnap = objects == null
+                    ? 0
+                    : ReadCurrentDistanceSnap(objects.Value.before, objects.Value.after);
+
+                if (currentSnap > DistanceSpacingMultiplier.MinValue)
+                {
+                    currentDistanceSpacingButton.Enabled.Value = currentDistanceSpacingButton.Expanded.Value
+                                                                 && !DistanceSpacingMultiplier.Disabled
+                                                                 && !Precision.AlmostEquals(currentSnap, DistanceSpacingMultiplier.Value, DistanceSpacingMultiplier.Precision / 2);
+                    currentDistanceSpacingButton.ContractedLabelText = $"current {currentSnap:N2}x";
+                    currentDistanceSpacingButton.ExpandedLabelText = $"Use current ({currentSnap:N2}x)";
+                }
+                else
+                {
+                    currentDistanceSpacingButton.Enabled.Value = false;
+                    currentDistanceSpacingButton.ContractedLabelText = string.Empty;
+                    currentDistanceSpacingButton.ExpandedLabelText = "Use current (unavailable)";
+                }
             }
         }
 
